@@ -6,6 +6,9 @@ import ModalAddNew from "./ModalAddNew";
 import ModalEditUser from "./ModalEditUser";
 import ModalConfirm from "./ModalConfirm";
 import _ from "lodash";
+import { debounce } from "lodash";
+import "./TableUser.scss";
+import { CSVLink } from "react-csv";
 
 const TableUsers = (props) => {
   const [listUsers, setListUsers] = useState([]);
@@ -17,6 +20,11 @@ const TableUsers = (props) => {
   const [dataUserEdit, setDataUserEdit] = useState({}); //Đặt biến để giữ lại user
   const [dataUserDelete, setDataUserDelete] = useState({}); //Đặt biến để giữ lại delete user
   const [isShowModalDelete, setIsShowModalDelete] = useState(false);
+
+  const [sortBy, setSortBy] = useState("asc");
+  const [sortField, setSortField] = useState("id");
+
+  const [keywords, setKeywords] = useState("");
 
   const handleClose = () => {
     setIsShowModalAddNew(false);
@@ -70,25 +78,110 @@ const TableUsers = (props) => {
     setListUsers(cloneListUsers);
   };
 
+  const handleSort = (sortBy, sortField) => {
+    setSortBy(sortBy);
+    setSortField(sortField);
+
+    let cloneListUsers = _.cloneDeep(listUsers);
+    cloneListUsers = _.orderBy(cloneListUsers, [sortField], [sortBy]); // Thư viện Lodash
+    setListUsers(cloneListUsers);
+  };
+
+  const handleSearch = debounce((e) => {
+    let term = e.target.value;
+    if (term) {
+      let cloneListUsers = _.cloneDeep(listUsers);
+      cloneListUsers = cloneListUsers.filter((item) =>
+        item.email.includes(term)
+      );
+      setListUsers(cloneListUsers);
+    } else {
+      getUsers(1);
+    }
+  }, 500);
+
+  const csvData = [
+    ["firstname", "lastname", "email"],
+    ["Ahmed", "Tomi", "ah@smthing.co.com"],
+    ["Raed", "Labes", "rl@smthing.co.com"],
+    ["Yezzi", "Min l3b", "ymin@cocococo.com"],
+  ];
+
   return (
     <>
       <div className="my-3 add-new">
         <span>
           <h3>List Users</h3>
         </span>
-        <button
-          className="btn btn-primary"
-          onClick={() => setIsShowModalAddNew(true)}
-        >
-          Add new user
-        </button>
+
+        <div className="group-btn">
+          <label htmlFor="test" className="btn btn-success">
+            <i class="fa-solid fa-cloud-arrow-up me-2"></i>
+            Import
+          </label>
+          <input id="test" type="file" hidden />
+          <CSVLink
+            data={csvData}
+            filename={"List Users.csv"}
+            className="btn btn-dark"
+          >
+            <i class="fa-solid fa-file-arrow-down me-2"></i>
+            Export
+          </CSVLink>
+          <button
+            className="btn btn-primary"
+            onClick={() => setIsShowModalAddNew(true)}
+          >
+            <i class="fa-solid fa-circle-plus me-2"></i>
+            Add new user
+          </button>
+        </div>
       </div>
+      {/* FORM CONTROL INPUT */}
+      <div className="col-4 my-3">
+        <input
+          className="form-control"
+          placeholder="Search user by email"
+          // value={keywords}
+          onChange={(e) => handleSearch(e)}
+        />
+      </div>
+
       <Table striped bordered hover>
         <thead>
           <tr>
-            <th>ID</th>
+            <th>
+              <div className="sort-header">
+                <span>ID</span>
+                <span>
+                  <i
+                    className="fa-solid fa-arrow-down-long"
+                    onClick={() => handleSort("desc", "id")}
+                  ></i>
+                  <i
+                    className="fa-solid fa-arrow-up-long"
+                    onClick={() => handleSort("asc", "id")}
+                  ></i>
+                </span>
+              </div>
+            </th>
             <th>Email</th>
-            <th>First name</th>
+            <th>
+              <div className="sort-header">
+                <span>First name</span>
+                <span>
+                  <i
+                    className="fa-solid fa-arrow-down-long"
+                    onClick={() => handleSort("desc", "first_name")}
+                  ></i>
+
+                  <i
+                    className="fa-solid fa-arrow-up-long"
+                    onClick={() => handleSort("asc", "first_name")}
+                  ></i>
+                </span>
+              </div>
+            </th>
             <th>Last name</th>
             <th>Action</th>
           </tr>
