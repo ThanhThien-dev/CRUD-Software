@@ -1,0 +1,84 @@
+.login-container {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+
+  .title {
+    font-size: 32px;
+    color: rgba(22, 24, 35, 1);
+    font-weight: bold;
+    margin: 16px auto;
+  }
+
+  .text {
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .input-login {
+    margin-bottom: 8px;
+    padding-left: 10px;
+    width: 100%;
+    background-color: rgba(22, 24, 35, 0.06);
+    border: 1px solid rgba(22, 24, 35, 0.12);
+    border-radius: 2px;
+    color: rgba(22, 24, 35, 1);
+    line-height: 100%;
+    outline: none;
+    font-size: 16px;
+    height: 44px;
+
+    &:hover {
+      background-color: #dedede;
+    }
+  }
+
+  .input-password {
+    position: relative;
+
+    i {
+      font-size: 15px;
+      cursor: pointer;
+      position: absolute;
+      right: 11px;
+      top: 14px;
+    }
+  }
+
+  .btn-login {
+    border-radius: 4px;
+    border: none;
+    color: rgba(22, 24, 35, 0.34);
+    background-color: rgba(22, 24, 35, 0.06);
+    min-width: 120px;
+    min-height: 46px;
+    font-size: 16px;
+    line-height: 22px;
+    font-weight: 700;
+    margin: 20px 0;
+    cursor: pointer;
+  }
+  .login-active {
+    border-radius: 4px;
+    border: none;
+    color: white;
+    min-width: 120px;
+    min-height: 46px;
+    font-size: 16px;
+    line-height: 22px;
+    font-weight: 700;
+    margin: 20px 0;
+    cursor: pointer;
+    background-color: rgba(254, 44, 85, 1);
+  }
+  button[disabled="disabled"],
+  button:disabled {
+    cursor: not-allowed;
+  }
+
+  .go-back {
+    margin: 0 auto;
+    cursor: pointer;
+    font-weight: 600;
+  }
+}
